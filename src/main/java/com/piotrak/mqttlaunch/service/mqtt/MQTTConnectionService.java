@@ -1,23 +1,27 @@
 package com.piotrak.mqttlaunch.service.mqtt;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import javax.annotation.PostConstruct;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Service for the MQTT connection
  */
 @Service("mqttConnectionService")
+@ConfigurationProperties
 public class MQTTConnectionService {
 
-    private Logger LOGGER = Logger.getLogger("MQTTConnectionService");
+    private Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
     private MQTTConnection mqttConnection;
+
+    private String subscribeTopic;
+
+    private String publishTopic;
 
     public MQTTConnectionService(@Autowired MQTTConnection mqttConnection) {
         this.mqttConnection = mqttConnection;
@@ -39,36 +43,33 @@ public class MQTTConnectionService {
 //
     /**
      * Subscribe to the topic
-     * @param topic Topic to be subscribed to
      */
-    public void subscribeToTopic(String topic){
-        LOGGER.log(Level.INFO, "Subscribing to topic: " + topic);
-         mqttConnection.subscribe(topic);
+    @PostConstruct
+    public void subscribeToTopic(){
+        LOGGER.log(Level.INFO, "Subscribing to topic: " + subscribeTopic);
+         mqttConnection.subscribe(subscribeTopic);
     }
-//
-//    /**
-//     * Check for the MQTT commands in the queue
-//     */
-//    @Scheduled(fixedDelay = 1000)
-//    @Async
-//    @Override
-//    public void checkForCommands() {
-//        LOGGER.log(Level.FINE, "Looking for commands from the MQTT Connection");
-//        super.checkForCommands();
-//    }
-//
-//    /**
-//     * Send the command to the appropriate elementService
-//     * @param command Command to be sent
-//     */
-//    @Override
-//    public void sendCommandToElementService(Command command) {
-//        ElementService service = elementServiceTopicsMap.get(((MQTTCommand) command).getTopic());
-//        if(service != null){
-//            service.commandReceived(command);
-//        } else{
-//            LOGGER.log(Level.WARNING, "Unable to localize the ElementService for command: " + command);
-//        }
-//    }
-//
+
+    public String getSubscribeTopic() {
+        return subscribeTopic;
+    }
+
+    public void setSubscribeTopic(String subscribeTopic) {
+        this.subscribeTopic = subscribeTopic;
+    }
+
+    public String getPublishTopic() {
+        return publishTopic;
+    }
+
+    public void setPublishTopic(String publishTopic) {
+        this.publishTopic = publishTopic;
+    }
+
+    /**
+     * Check for the MQTT commands in the queue
+     */
+    public String checkForMessages() {
+        return mqttConnection.getMessageQueue().poll();
+    }
 }

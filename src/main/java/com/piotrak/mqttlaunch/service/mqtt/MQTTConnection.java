@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +46,14 @@ public class MQTTConnection {
      */
     private Set<String> subscribeTopics = new HashSet<>();
 
+    /**
+     * Commands received using the connection that are to be dealt with
+     */
+    private Queue<String> messageQueue = new LinkedList<>();
+
+    /**
+     * Connect to the MQTT broker
+     */
     public void connect() {
         String uri = protocol + "://" + host + ":" + port;
         LOGGER.log(Level.INFO, "Connecting to " + uri);
@@ -126,9 +136,8 @@ public class MQTTConnection {
                 @Override
                 public void messageArrived(String topic, MqttMessage mqttMessage) {
                     String message = new String(mqttMessage.getPayload());
-//                    MQTTCommand command = new MQTTCommand(topic, message);
-                    LOGGER.log(Level.INFO, "Command received: " + topic + " " + mqttMessage);
-//                    getCommandQueue().add(command);
+                    LOGGER.log(Level.INFO, "Message received: " + topic + " " + message);
+                    getMessageQueue().add(message);
                 }
 
                 /**
@@ -170,4 +179,9 @@ public class MQTTConnection {
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
+
+    public Queue<String> getMessageQueue() {
+        return messageQueue;
+    }
+
 }

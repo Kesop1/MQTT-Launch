@@ -5,8 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 
 @PropertySource(value = {"classpath:application.properties",
 		"file:/usr/local/tomcat/webapps/application.properties"}, ignoreResourceNotFound = true)
