@@ -33,7 +33,7 @@ public class LauncherService {
         if(exec != null){
             LOGGER.log(Level.INFO, "Launching: " + exec);
             try {
-                Process process = new ProcessBuilder(exec).start();
+                Runtime.getRuntime().exec(exec);
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, "Unable to launch " + exec, e.getMessage());
             }
