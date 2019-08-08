@@ -36,7 +36,11 @@ public class MQTTLaunchService {
             message = mqttConnectionService.checkForMessages();
             if (message != null) {
                 LOGGER.log(Level.FINE, "Message found: " + message);
-                launcherService.launchApplication(message);
+                if("on".equalsIgnoreCase(message)){
+                    mqttConnectionService.publishMessage("on");
+                } else {
+                    launcherService.launchApplication(message);
+                }
             }
         } while (message != null);
     }

@@ -50,6 +50,21 @@ public class MQTTConnectionService {
          mqttConnection.subscribe(subscribeTopic);
     }
 
+    /**
+     * Check for the MQTT commands in the queue
+     */
+    public String checkForMessages() {
+        return mqttConnection.getMessageQueue().poll();
+    }
+
+    /**
+     * Publish a message to the broker
+     * @param message message to be published
+     */
+    public void publishMessage(String message){
+        mqttConnection.sendMessage(message, publishTopic);
+    }
+
     public String getSubscribeTopic() {
         return subscribeTopic;
     }
@@ -64,12 +79,5 @@ public class MQTTConnectionService {
 
     public void setPublishTopic(String publishTopic) {
         this.publishTopic = publishTopic;
-    }
-
-    /**
-     * Check for the MQTT commands in the queue
-     */
-    public String checkForMessages() {
-        return mqttConnection.getMessageQueue().poll();
     }
 }

@@ -152,6 +152,15 @@ public class MQTTConnection {
         }
     }
 
+    public void sendMessage(String message, String topic){
+        LOGGER.log(Level.INFO, String.format("Sending message: %s to the topic: %s", message, topic));
+        try {
+            getMqttClient().publish(topic, message.getBytes(), 0, false);
+        } catch (MqttException e) {
+            LOGGER.log(Level.SEVERE, "Unable to send the message", e.getMessage());
+        }
+    }
+
     public MqttClient getMqttClient() {
         return mqttClient;
     }
