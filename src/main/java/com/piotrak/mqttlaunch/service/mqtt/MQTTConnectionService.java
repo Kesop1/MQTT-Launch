@@ -28,19 +28,6 @@ public class MQTTConnectionService {
         mqttConnection.connect();
     }
 
-//
-//    /**
-//     * Send command to the MQTT broker
-//     * @param command Command to be sent
-//     */
-//    public void actOnConnection(Command command) {
-//        try {
-//            getConnection().send(command);
-//        } catch (ConnectionException e) {
-//            LOGGER.log(Level.WARNING, "Unable to send command: " + command, e);
-//        }
-//    }
-//
     /**
      * Subscribe to the topic
      */

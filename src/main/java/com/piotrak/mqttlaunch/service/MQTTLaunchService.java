@@ -26,6 +26,7 @@ public class MQTTLaunchService {
 
     /**
      * Check for the MQTT messages in the queue, if found launch the corresponding program
+     * if "isOn" message found, then return current time
      */
     @Scheduled(fixedDelay = 1000)
     @Async
@@ -36,8 +37,8 @@ public class MQTTLaunchService {
             message = mqttConnectionService.checkForMessages();
             if (message != null) {
                 LOGGER.log(Level.FINE, "Message found: " + message);
-                if("on".equalsIgnoreCase(message)){
-                    mqttConnectionService.publishMessage("on");
+                if("isOn".equalsIgnoreCase(message)){
+                    mqttConnectionService.publishMessage(String.valueOf(System.currentTimeMillis()));
                 } else {
                     launcherService.launchApplication(message);
                 }
