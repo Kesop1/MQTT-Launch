@@ -11,3 +11,5 @@ Instalation:
 Features:
 - runs applications based on the messages received in the subscribeTopic
 - publishes current time in millis if "isOn" message is received
+- publishes ON or OFF status on application start/exit
+- displays a minimalistic GUI
