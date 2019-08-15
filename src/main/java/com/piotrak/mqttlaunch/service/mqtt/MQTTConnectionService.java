@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,11 +31,13 @@ public class MQTTConnectionService {
 
     /**
      * Subscribe to the topic
+     * Publish status message
      */
     @PostConstruct
     public void subscribeToTopic(){
         LOGGER.log(Level.INFO, "Subscribing to topic: " + subscribeTopic);
-         mqttConnection.subscribe(subscribeTopic);
+        mqttConnection.subscribe(subscribeTopic);
+        publishStatusMessage("ON");
     }
 
     /**
@@ -45,11 +48,27 @@ public class MQTTConnectionService {
     }
 
     /**
+     * Publish OFF message on application exit
+     */
+    @PreDestroy
+    public void sendExitStatusMessage(){
+        publishStatusMessage("OFF");
+    }
+
+    /**
      * Publish a message to the broker
      * @param message message to be published
      */
     public void publishMessage(String message){
         mqttConnection.sendMessage(message, publishTopic);
+    }
+
+    /**
+     * Publish a retained message to the broker
+     * @param message message to be published
+     */
+    public void publishStatusMessage(String message){
+        mqttConnection.sendMessage(message, publishTopic, 0, true);
     }
 
     public String getSubscribeTopic() {

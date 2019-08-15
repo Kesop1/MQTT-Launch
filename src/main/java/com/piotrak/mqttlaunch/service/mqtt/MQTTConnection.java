@@ -152,10 +152,26 @@ public class MQTTConnection {
         }
     }
 
+    /**
+     * Send a non-retained message with QoS 0 to the broker
+     * @param message message to be sent
+     * @param topic topic of the message
+     */
     public void sendMessage(String message, String topic){
-        LOGGER.log(Level.INFO, String.format("Sending message: %s to the topic: %s", message, topic));
+        sendMessage(message, topic, 0, false);
+    }
+
+    /**
+     * Send a message to the broker
+     * @param message message to be sent
+     * @param topic topic of the message
+     * @param qos Quality of Service
+     * @param retained retain the message
+     */
+    public void sendMessage(String message, String topic, int qos, boolean retained){
+        LOGGER.log(Level.INFO, String.format("Sending%s message: %s to the topic: %s", retained ? " retained" : "", message, topic));
         try {
-            getMqttClient().publish(topic, message.getBytes(), 0, false);
+            getMqttClient().publish(topic, message.getBytes(), qos, retained);
         } catch (MqttException e) {
             LOGGER.log(Level.SEVERE, "Unable to send the message", e.getMessage());
         }
