@@ -29,7 +29,7 @@ public class LauncherService {
      */
     public void launchApplication(String message){
         LOGGER.log(Level.INFO, "Message arrived: " + message);
-        String exec = getMessage().get(message);
+        String exec = getMessage().get(message.toLowerCase());
         if(exec != null){
             LOGGER.log(Level.INFO, "Launching: " + exec);
             try {
